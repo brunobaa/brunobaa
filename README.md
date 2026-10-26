@@ -2,7 +2,7 @@
 
 Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciência da Computação na PUCRS**. Resolvo problemas de ponta a ponta: do hardware à rede, do atendimento ao usuário ao código.
 
-- 🛠️ **No dia a dia:** atendimento N1/N2/N3, Active Directory, redes, Windows e manutenção de computadores
+- 🛠️ **No dia a dia:** atendimento N1/N2/N3 presencial e remoto, GLPI, Active Directory, redes (TCP/IP, DNS, DHCP e Wi-Fi), Windows, Office 365 e manutenção de computadores
 - 💻 **No código:** React, TypeScript, Java, Python, Go e C/C++
 - 🌐 **Portfólio:** [portifolio-mu-ecru.vercel.app](https://portifolio-mu-ecru.vercel.app/)
 - 📫 **Contato:** [brunoandradeprof7@gmail.com](mailto:brunoandradeprof7@gmail.com) · [LinkedIn](https://www.linkedin.com/in/bruno-andrade-4a1581313/)
@@ -14,7 +14,9 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 ![Windows](https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
 ![Active Directory](https://img.shields.io/badge/Active_Directory-0078D4?logo=microsoft&logoColor=white)
-![Redes](https://img.shields.io/badge/Redes_e_Sub--redes-1BA0D7?logo=cisco&logoColor=white)
+![Redes](https://img.shields.io/badge/TCP%2FIP_·_DNS_·_DHCP-1BA0D7?logo=cisco&logoColor=white)
+![GLPI](https://img.shields.io/badge/GLPI-2C3E50?logoColor=white)
+![Office 365](https://img.shields.io/badge/Office_365-D83B01?logo=microsoftoffice&logoColor=white)
 
 **Desenvolvimento**
 
