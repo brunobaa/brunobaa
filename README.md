@@ -3,7 +3,7 @@
 Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciência da Computação na PUCRS**. Resolvo problemas de ponta a ponta: do hardware à rede, do atendimento ao usuário ao código.
 
 - 🛠️ **No dia a dia:** atendimento N1/N2/N3 presencial e remoto, GLPI, Active Directory, redes (TCP/IP, DNS, DHCP e Wi-Fi), Windows, Office 365 e manutenção de computadores
-- 💻 **No código:** React, TypeScript, Java, Python, Go e C/C++
+- 💻 **No código:** React, TypeScript, Java, Python e C/C++
 - 🌐 **Portfólio:** [portifolio-mu-ecru.vercel.app](https://portifolio-mu-ecru.vercel.app/)
 - 📫 **Contato:** [brunoandradeprof7@gmail.com](mailto:brunoandradeprof7@gmail.com) · [LinkedIn](https://www.linkedin.com/in/bruno-andrade-4a1581313/)
 
@@ -26,9 +26,14 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 ![Java](https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?logo=springboot&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
-![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)
 ![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+
+## 🟡 Pac-Man (em construção)
+
+<img src="pacman/pacman.svg" alt="Pac-Man em construção" width="320">
+
+Um Pac-Man que vai comer meu gráfico de contribuições, com fantasminhas atrás dele. Estou construindo aos poucos: acompanhe em [pacman/ROADMAP.md](pacman/ROADMAP.md).
 
 ## Projetos em destaque
 
