@@ -8,7 +8,7 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Pac-Man andando em linha reta e comendo os pontos (`npm run gerar` → `saida/linha.svg`)
 - [x] Buscar o gráfico de contribuições pela API do GitHub (`saida/contribuicoes.json`)
 - [x] Desenhar a grade de contribuições (7 x 53 quadradinhos) (`saida/grade.svg`)
-- [ ] Calcular o caminho do Pac-Man pela grade
+- [x] Calcular o caminho do Pac-Man pela grade (`src/caminho.js`, testes com `npm test`)
 - [ ] Fazer os quadradinhos sumirem quando forem comidos
 - [ ] Fantasmas seguindo o Pac-Man
 - [ ] Versão para tema escuro

@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "gerar": "node src/gerar.js"
+    "gerar": "node src/gerar.js",
+    "test": "node --test"
   },
   "engines": {
     "node": ">=18"

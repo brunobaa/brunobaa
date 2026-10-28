@@ -1,4 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { calcularCaminho } from "./caminho.js";
 import { buscarContribuicoes } from "./contribuicoes.js";
 import { gerarGrade } from "./grade.js";
 import { gerarLinha } from "./linha.js";
@@ -19,3 +20,8 @@ console.log(
 
 writeFileSync(new URL("grade.svg", PASTA_SAIDA), gerarGrade(contribuicoes));
 console.log("Gerado: saida/grade.svg");
+
+const caminho = calcularCaminho(contribuicoes);
+console.log(
+  `Caminho: ${caminho.length} passos, comendo ${caminho.filter((passo) => passo.come).length} dias com contribuições`,
+);
