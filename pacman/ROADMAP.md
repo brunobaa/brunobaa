@@ -7,7 +7,7 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Sprites prontos em `sprites/`: Pac-Man, morte do Pac-Man, os quatro fantasmas, fantasma assustado, piscando e só os olhos, ponto e pastilha
 - [x] Pac-Man andando em linha reta e comendo os pontos (`npm run gerar` → `saida/linha.svg`)
 - [x] Buscar o gráfico de contribuições pela API do GitHub (`saida/contribuicoes.json`)
-- [ ] Desenhar a grade de contribuições (7 x 53 quadradinhos)
+- [x] Desenhar a grade de contribuições (7 x 53 quadradinhos) (`saida/grade.svg`)
 - [ ] Calcular o caminho do Pac-Man pela grade
 - [ ] Fazer os quadradinhos sumirem quando forem comidos
 - [ ] Fantasmas seguindo o Pac-Man
