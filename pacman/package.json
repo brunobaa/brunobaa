@@ -1,0 +1,13 @@
+{
+  "name": "pacman-contribuicoes",
+  "version": "0.1.0",
+  "description": "Pac-Man que come o gráfico de contribuições do GitHub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gerar": "node src/gerar.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
