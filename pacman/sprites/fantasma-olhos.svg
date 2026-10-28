@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28">
+  <!-- Fantasma comido: só os olhos voltam para a casa dos fantasmas -->
+  <ellipse cx="9" cy="12" rx="3.5" ry="4.5" fill="#ffffff"/>
+  <ellipse cx="19" cy="12" rx="3.5" ry="4.5" fill="#ffffff"/>
+  <circle cx="10.5" cy="13" r="2" fill="#2121de"/>
+  <circle cx="20.5" cy="13" r="2" fill="#2121de"/>
+</svg>

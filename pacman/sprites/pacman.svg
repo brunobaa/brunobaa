@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
+  <!-- Pac-Man virado para a direita, abrindo e fechando a boca; o código gira ele para as outras direções -->
+  <path fill="#ffcc00" d="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z">
+    <animate attributeName="d" dur="0.4s" repeatCount="indefinite"
+      values="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z;
+              M25 25 L50 24.9 A25 25 0 1 0 50 25.1 Z;
+              M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z"/>
+  </path>
+</svg>

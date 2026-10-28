@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
+  <!-- Pac-Man morrendo: a boca abre até ele sumir quando um fantasma o pega -->
+  <path fill="#ffcc00" d="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z">
+    <animate attributeName="d" dur="1.5s" repeatCount="indefinite" calcMode="discrete"
+      values="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z;
+              M25 25 L42.68 7.32 A25 25 0 1 0 42.68 42.68 Z;
+              M25 25 L25 0 A25 25 0 1 0 25 50 Z;
+              M25 25 L7.32 7.32 A25 25 0 0 0 7.32 42.68 Z;
+              M25 25 L0.38 20.66 A25 25 0 0 0 0.38 29.34 Z;
+              M25 25 Z"/>
+  </path>
+</svg>

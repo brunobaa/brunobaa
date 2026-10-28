@@ -31,7 +31,12 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 
 ## 🟡 Pac-Man (em construção)
 
-<img src="pacman/pacman.svg" alt="Pac-Man em construção" width="320">
+<img src="pacman/sprites/pacman.svg" alt="Pac-Man" width="36">
+<img src="pacman/sprites/fantasma-blinky.svg" alt="Blinky" width="28">
+<img src="pacman/sprites/fantasma-pinky.svg" alt="Pinky" width="28">
+<img src="pacman/sprites/fantasma-inky.svg" alt="Inky" width="28">
+<img src="pacman/sprites/fantasma-clyde.svg" alt="Clyde" width="28">
+<img src="pacman/sprites/fantasma-assustado.svg" alt="Fantasma assustado" width="28">
 
 Um Pac-Man que vai comer meu gráfico de contribuições, com fantasminhas atrás dele. Estou construindo aos poucos: acompanhe em [pacman/ROADMAP.md](pacman/ROADMAP.md).
 

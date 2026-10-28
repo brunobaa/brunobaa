@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <!-- Pastilha de poder: pisca e, quando comida, deixa os fantasmas assustados -->
+  <circle cx="8" cy="8" r="6" fill="#ffb8ae">
+    <animate attributeName="opacity" dur="0.5s" repeatCount="indefinite" calcMode="discrete" values="1;0"/>
+  </circle>
+</svg>

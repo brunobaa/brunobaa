@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28">
+  <!-- Fantasma Inky: corpo com a saia balançando e olhos virados para a direita -->
+  <path fill="#00ffff" d="M0 28 V14 A14 14 0 0 1 28 14 V28 L23.3 23.3 L18.7 28 L14 23.3 L9.3 28 L4.7 23.3 Z">
+    <animate attributeName="d" dur="0.3s" repeatCount="indefinite" calcMode="discrete" values="M0 28 V14 A14 14 0 0 1 28 14 V28 L23.3 23.3 L18.7 28 L14 23.3 L9.3 28 L4.7 23.3 Z;M0 24 V14 A14 14 0 0 1 28 14 V24 L23.3 28 L18.7 23.3 L14 28 L9.3 23.3 L4.7 28 Z"/>
+  </path>
+  <ellipse cx="9" cy="12" rx="3.5" ry="4.5" fill="#ffffff"/>
+  <ellipse cx="19" cy="12" rx="3.5" ry="4.5" fill="#ffffff"/>
+  <circle cx="10.5" cy="13" r="2" fill="#2121de"/>
+  <circle cx="20.5" cy="13" r="2" fill="#2121de"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28">
+  <!-- Fantasma assustado: fica azul depois que o Pac-Man come uma pastilha -->
+  <path fill="#2121de" d="M0 28 V14 A14 14 0 0 1 28 14 V28 L23.3 23.3 L18.7 28 L14 23.3 L9.3 28 L4.7 23.3 Z">
+    <animate attributeName="d" dur="0.3s" repeatCount="indefinite" calcMode="discrete" values="M0 28 V14 A14 14 0 0 1 28 14 V28 L23.3 23.3 L18.7 28 L14 23.3 L9.3 28 L4.7 23.3 Z;M0 24 V14 A14 14 0 0 1 28 14 V24 L23.3 28 L18.7 23.3 L14 28 L9.3 23.3 L4.7 28 Z"/>
+  </path>
+  <rect x="8" y="10" width="4" height="4" fill="#ffb8ae"/>
+  <rect x="16" y="10" width="4" height="4" fill="#ffb8ae"/>
+  <path d="M4 20 L7 17 L10 20 L14 17 L18 20 L21 17 L24 20" fill="none" stroke="#ffb8ae" stroke-width="1.5"/>
+</svg>
