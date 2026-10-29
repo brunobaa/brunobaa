@@ -1,4 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
+import { gerarAnimacao } from "./animacao.js";
 import { calcularCaminho } from "./caminho.js";
 import { buscarContribuicoes } from "./contribuicoes.js";
 import { gerarGrade } from "./grade.js";
@@ -25,3 +26,6 @@ const caminho = calcularCaminho(contribuicoes);
 console.log(
   `Caminho: ${caminho.length} passos, comendo ${caminho.filter((passo) => passo.come).length} dias com contribuições`,
 );
+
+writeFileSync(new URL("pacman.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, caminho));
+console.log("Gerado: saida/pacman.svg");
