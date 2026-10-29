@@ -2,6 +2,15 @@ import { CORES, TAMANHO_CELULA, gerarGrade, posicaoDaCelula } from "./grade.js";
 import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
+const TAMANHO_FANTASMA = 12;
+
+// Os fantasmas seguem o rastro do Pac-Man, cada um alguns passos atrás.
+const FANTASMAS = [
+  { nome: "blinky", atraso: 5 },
+  { nome: "pinky", atraso: 9 },
+  { nome: "inky", atraso: 13 },
+  { nome: "clyde", atraso: 17 },
+];
 
 // Ângulo do Pac-Man (o sprite olha para a direita) conforme a direção do passo.
 const ANGULOS = {
@@ -12,8 +21,8 @@ const ANGULOS = {
 };
 
 // Gera o SVG com o Pac-Man percorrendo o caminho na grade de contribuições.
-// Cada quadradinho verde fica cinza no instante em que ele o come; no fim a
-// animação para um pouco e recomeça do zero.
+// Cada quadradinho verde fica cinza no instante em que ele o come, os quatro
+// fantasmas vêm atrás dele e no fim a animação para um pouco e recomeça do zero.
 export function gerarAnimacao(contribuicoes, passos, { segundosPorPasso = 0.15, pausaNoFim = 2 } = {}) {
   const tempoAndando = (passos.length - 1) * segundosPorPasso;
   const duracao = tempoAndando + pausaNoFim;
@@ -50,7 +59,18 @@ export function gerarAnimacao(contribuicoes, passos, { segundosPorPasso = 0.15, 
     </g>
   </g>`;
 
-  return gerarGrade(contribuicoes, { conteudoDaCelula, conteudoExtra: pacman });
+  // Cada fantasma aparece no primeiro dia quando o Pac-Man já andou "atraso"
+  // passos e daí em diante pisa exatamente onde ele pisou, sempre atrás dele.
+  const fantasmas = FANTASMAS.filter(({ atraso }) => atraso < passos.length).map(({ nome, atraso }) => {
+    const rastro = centros.map((_, i) => centros[Math.max(0, i - atraso)]);
+    return `<g opacity="0">
+    <animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="0;1" keyTimes="0;${formatar(momentos[atraso])}"/>
+    <animateTransform attributeName="transform" type="translate" dur="${duracao}s" repeatCount="indefinite" values="${[...rastro, rastro.at(-1)].join(";")}" keyTimes="${keyTimes}"/>
+    ${carregarSprite(`fantasma-${nome}`, { x: -TAMANHO_FANTASMA / 2, y: -TAMANHO_FANTASMA / 2, tamanho: TAMANHO_FANTASMA })}
+  </g>`;
+  });
+
+  return gerarGrade(contribuicoes, { conteudoDaCelula, conteudoExtra: [...fantasmas, pacman].join("\n  ") });
 }
 
 function formatar(numero) {

@@ -10,7 +10,7 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Desenhar a grade de contribuições (7 x 53 quadradinhos) (`saida/grade.svg`)
 - [x] Calcular o caminho do Pac-Man pela grade (`src/caminho.js`, testes com `npm test`)
 - [x] Fazer os quadradinhos sumirem quando forem comidos (`src/animacao.js` → `saida/pacman.svg`)
-- [ ] Fantasmas seguindo o Pac-Man
+- [x] Fantasmas seguindo o Pac-Man (cada um alguns passos atrás, no rastro dele)
 - [ ] Versão para tema escuro
 - [ ] GitHub Action gerando a animação todo dia
 - [ ] Trocar a prévia do README pela animação final
