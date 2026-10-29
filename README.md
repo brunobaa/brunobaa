@@ -44,17 +44,6 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 
 Um Pac-Man que vai comer meu gráfico de contribuições, com fantasminhas atrás dele. Estou construindo aos poucos: acompanhe em [pacman/ROADMAP.md](pacman/ROADMAP.md).
 
-## Projetos em destaque
-
-| Projeto | O que é | Tecnologias |
-| --- | --- | --- |
-| [Portfólio](https://github.com/brunobaa/Portifolio) | Site pessoal bilíngue com currículo, projetos e mini-jogos | React, TypeScript |
-| [Simulador de Sistema Operacional](https://github.com/brunobaa/SistemasOperacionaist1) | Máquina virtual com CPU, memória, interrupções e chamadas de sistema | Java |
-| [Bullet Hell Multiplayer](https://github.com/brunobaa/bulletHell) | Jogo no terminal para até 4 jogadores em rede, em tempo real | Go, TCP/IP |
-| [Microsserviço de Câmbio](https://github.com/brunobaa/microservico) | Serviço REST que consulta outro microsserviço | Java, Spring Boot |
-| [Computação Gráfica](https://github.com/brunobaa/t2-cg) | Curvas de Bézier, polígonos e manipulação de imagens | C++, OpenGL |
-| [Bot de Coleta de Mensagens](https://github.com/brunobaa/BotCopiaMensagem) | Bot do Discord que organiza mensagens por usuário em JSON | Python |
-
 ---
 
 <sub>🇺🇸 IT Support intern at the Rio Grande do Sul State Government and Computer Science student at PUCRS, Brazil. Check out my [portfolio](https://portifolio-mu-ecru.vercel.app/) (available in English).</sub>
