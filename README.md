@@ -40,7 +40,10 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 
 <img src="pacman/saida/linha.svg" alt="Pac-Man andando e comendo os pontos" width="400">
 
-<img src="pacman/saida/pacman.svg" alt="Pac-Man comendo o gráfico de contribuições" width="696">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="pacman/saida/pacman-escuro.svg">
+  <img src="pacman/saida/pacman.svg" alt="Pac-Man comendo o gráfico de contribuições" width="696">
+</picture>
 
 Um Pac-Man que vai comer meu gráfico de contribuições, com fantasminhas atrás dele. Estou construindo aos poucos: acompanhe em [pacman/ROADMAP.md](pacman/ROADMAP.md).
 

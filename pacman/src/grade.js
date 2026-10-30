@@ -7,8 +7,11 @@ export const MARGEM = 5;
 
 const PASSO = TAMANHO_CELULA + ESPACO_CELULA;
 
-// Cores do tema claro do GitHub, do nível 0 (sem contribuições) ao 4.
-export const CORES = ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"];
+// Cores dos temas claro e escuro do GitHub, do nível 0 (sem contribuições) ao 4.
+export const TEMAS = {
+  claro: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+  escuro: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+};
 
 // Canto superior esquerdo do quadradinho de um dia, a partir da semana
 // (coluna) e do dia da semana (linha, 0 = domingo).
@@ -21,8 +24,9 @@ export function posicaoDaCelula(semana, diaDaSemana) {
 
 // conteudoDaCelula(semana, diaDaSemana, dia) pode devolver elementos extras para
 // dentro de cada quadradinho (como uma animação) e conteudoExtra é desenhado
-// por cima da grade.
-export function gerarGrade({ semanas }, { conteudoDaCelula = () => "", conteudoExtra = "" } = {}) {
+// por cima da grade. tema é "claro" ou "escuro".
+export function gerarGrade({ semanas }, { tema = "claro", conteudoDaCelula = () => "", conteudoExtra = "" } = {}) {
+  const cores = TEMAS[tema];
   const largura = MARGEM * 2 + semanas.length * PASSO - ESPACO_CELULA;
   const altura = MARGEM * 2 + 7 * PASSO - ESPACO_CELULA;
 
@@ -30,7 +34,7 @@ export function gerarGrade({ semanas }, { conteudoDaCelula = () => "", conteudoE
     dias.map((dia) => {
       const diaDaSemana = new Date(`${dia.data}T00:00:00Z`).getUTCDay();
       const { x, y } = posicaoDaCelula(semana, diaDaSemana);
-      return `<rect x="${x}" y="${y}" width="${TAMANHO_CELULA}" height="${TAMANHO_CELULA}" rx="2" fill="${CORES[dia.nivel]}"><title>${dia.data}: ${dia.quantidade}</title>${conteudoDaCelula(semana, diaDaSemana, dia)}</rect>`;
+      return `<rect x="${x}" y="${y}" width="${TAMANHO_CELULA}" height="${TAMANHO_CELULA}" rx="2" fill="${cores[dia.nivel]}"><title>${dia.data}: ${dia.quantidade}</title>${conteudoDaCelula(semana, diaDaSemana, dia)}</rect>`;
     }),
   );
 

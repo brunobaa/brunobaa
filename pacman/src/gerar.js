@@ -20,7 +20,8 @@ console.log(
 );
 
 writeFileSync(new URL("grade.svg", PASTA_SAIDA), gerarGrade(contribuicoes));
-console.log("Gerado: saida/grade.svg");
+writeFileSync(new URL("grade-escuro.svg", PASTA_SAIDA), gerarGrade(contribuicoes, { tema: "escuro" }));
+console.log("Gerado: saida/grade.svg e saida/grade-escuro.svg");
 
 const caminho = calcularCaminho(contribuicoes);
 console.log(
@@ -28,4 +29,5 @@ console.log(
 );
 
 writeFileSync(new URL("pacman.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, caminho));
-console.log("Gerado: saida/pacman.svg");
+writeFileSync(new URL("pacman-escuro.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, caminho, { tema: "escuro" }));
+console.log("Gerado: saida/pacman.svg e saida/pacman-escuro.svg");

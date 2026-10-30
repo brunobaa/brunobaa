@@ -71,3 +71,10 @@ test("fantasmas que não teriam onde andar não aparecem", () => {
 function movimentos(svg) {
   return [...svg.matchAll(/type="translate"[^>]*values="([^"]+)"/g)].map(([, valores]) => valores.split(";"));
 }
+
+test("no tema escuro usa as cores escuras do GitHub", () => {
+  const svg = gerarAnimacao({ semanas }, calcularCaminho({ semanas }), { tema: "escuro" });
+  assert.ok(svg.includes('fill="#161b22"'));
+  assert.ok(!svg.includes("#ebedf0"));
+  assert.match(svg, /values="#006d32;#161b22"/);
+});

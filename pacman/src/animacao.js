@@ -1,4 +1,4 @@
-import { CORES, TAMANHO_CELULA, gerarGrade, posicaoDaCelula } from "./grade.js";
+import { TAMANHO_CELULA, TEMAS, gerarGrade, posicaoDaCelula } from "./grade.js";
 import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
@@ -23,7 +23,12 @@ const ANGULOS = {
 // Gera o SVG com o Pac-Man percorrendo o caminho na grade de contribuições.
 // Cada quadradinho verde fica cinza no instante em que ele o come, os quatro
 // fantasmas vêm atrás dele e no fim a animação para um pouco e recomeça do zero.
-export function gerarAnimacao(contribuicoes, passos, { segundosPorPasso = 0.15, pausaNoFim = 2 } = {}) {
+export function gerarAnimacao(
+  contribuicoes,
+  passos,
+  { tema = "claro", segundosPorPasso = 0.15, pausaNoFim = 2 } = {},
+) {
+  const cores = TEMAS[tema];
   const tempoAndando = (passos.length - 1) * segundosPorPasso;
   const duracao = tempoAndando + pausaNoFim;
   // Momento (de 0 a 1 na animação toda) em que o Pac-Man chega em cada passo.
@@ -36,7 +41,7 @@ export function gerarAnimacao(contribuicoes, passos, { segundosPorPasso = 0.15, 
   const conteudoDaCelula = (semana, diaDaSemana, dia) => {
     const momento = comidoEm.get(`${semana},${diaDaSemana}`);
     if (momento === undefined) return "";
-    return `<animate attributeName="fill" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="${CORES[dia.nivel]};${CORES[0]}" keyTimes="0;${formatar(momento)}"/>`;
+    return `<animate attributeName="fill" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="${cores[dia.nivel]};${cores[0]}" keyTimes="0;${formatar(momento)}"/>`;
   };
 
   const centros = passos.map((passo) => {
@@ -70,7 +75,7 @@ export function gerarAnimacao(contribuicoes, passos, { segundosPorPasso = 0.15, 
   </g>`;
   });
 
-  return gerarGrade(contribuicoes, { conteudoDaCelula, conteudoExtra: [...fantasmas, pacman].join("\n  ") });
+  return gerarGrade(contribuicoes, { tema, conteudoDaCelula, conteudoExtra: [...fantasmas, pacman].join("\n  ") });
 }
 
 function formatar(numero) {
