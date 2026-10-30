@@ -12,5 +12,5 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Fazer os quadradinhos sumirem quando forem comidos (`src/animacao.js` → `saida/pacman.svg`)
 - [x] Fantasmas seguindo o Pac-Man (cada um alguns passos atrás, no rastro dele)
 - [x] Versão para tema escuro (`saida/pacman-escuro.svg`, escolhida pelo README conforme o tema)
-- [ ] GitHub Action gerando a animação todo dia
+- [x] GitHub Action gerando a animação todo dia (`.github/workflows/pacman.yml`, publica no branch `output`)
 - [ ] Trocar a prévia do README pela animação final

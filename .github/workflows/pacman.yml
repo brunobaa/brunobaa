@@ -1,0 +1,58 @@
+name: Pac-Man
+
+on:
+  # Todo dia à meia-noite de Brasília (03:00 UTC)
+  schedule:
+    - cron: "0 3 * * *"
+  # Botão para rodar na mão pela aba Actions
+  workflow_dispatch:
+  # Quando o gerador mudar no main
+  push:
+    branches:
+      - main
+    paths:
+      - "pacman/**"
+      - ".github/workflows/pacman.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: pacman
+    steps:
+      - name: Baixa o repositório
+        uses: actions/checkout@v4
+
+      - name: Instala o Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Roda os testes
+        run: npm test
+
+      - name: Gera as animações
+        run: npm run gerar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Separa só os SVGs
+        run: |
+          mkdir -p ../dist
+          cp saida/*.svg ../dist/
+
+      - name: Publica no branch output
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: output
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "Atualiza as animações do Pac-Man"
