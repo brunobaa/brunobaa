@@ -78,3 +78,27 @@ test("no tema escuro usa as cores escuras do GitHub", () => {
   assert.ok(!svg.includes("#ebedf0"));
   assert.match(svg, /values="#006d32;#161b22"/);
 });
+
+test("o placar soma os commits comidos até chegar no total", () => {
+  const passos = calcularCaminho({ semanas });
+  const svg = gerarAnimacao({ semanas }, passos, { segundosPorPasso: 1, pausaNoFim: 2 });
+  const placar = [...svg.matchAll(/Commits comidos: (\d+)<animate[^>]*keyTimes="([^"]+)"/g)].map(([, total, keyTimes]) => [
+    Number(total),
+    keyTimes,
+  ]);
+  // Come 3 commits no passo 1 e mais 3 no passo 6, numa animação de 8s.
+  assert.deepEqual(placar, [
+    [0, "0;0.125"],
+    [3, "0;0.125;0.75"],
+    [6, "0;0.75"],
+  ]);
+});
+
+test("se começa em cima de um dia verde, o placar já começa com ele", () => {
+  const comVerdeNoInicio = semanas.map((dias, semana) =>
+    dias.map((dia, i) => (semana === 0 && i === 0 ? { ...dia, quantidade: 2, nivel: 1 } : dia)),
+  );
+  const svg = gerarAnimacao({ semanas: comVerdeNoInicio }, calcularCaminho({ semanas: comVerdeNoInicio }));
+  const totais = [...svg.matchAll(/Commits comidos: (\d+)/g)].map(([, total]) => Number(total));
+  assert.deepEqual(totais, [2, 5, 8]);
+});

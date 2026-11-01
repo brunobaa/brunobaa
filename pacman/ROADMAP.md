@@ -15,6 +15,10 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] GitHub Action gerando a animação todo dia (`.github/workflows/pacman.yml`, publica no branch `output`)
 - [x] Trocar a prévia do README pela animação final (imagens do branch `output`)
 
+## Extras
+
+- [x] Placar com a quantidade de commits comidos
+
 ## Como rodar
 
 Precisa do Node 18 ou mais novo, sem dependências para instalar.

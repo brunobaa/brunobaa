@@ -7,6 +7,9 @@ export const MARGEM = 5;
 
 const PASSO = TAMANHO_CELULA + ESPACO_CELULA;
 
+// Altura só da grade, sem o espaço extra embaixo.
+export const ALTURA_GRADE = MARGEM * 2 + 7 * PASSO - ESPACO_CELULA;
+
 // Cores dos temas claro e escuro do GitHub, do nível 0 (sem contribuições) ao 4.
 export const TEMAS = {
   claro: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
@@ -24,11 +27,15 @@ export function posicaoDaCelula(semana, diaDaSemana) {
 
 // conteudoDaCelula(semana, diaDaSemana, dia) pode devolver elementos extras para
 // dentro de cada quadradinho (como uma animação) e conteudoExtra é desenhado
-// por cima da grade. tema é "claro" ou "escuro".
-export function gerarGrade({ semanas }, { tema = "claro", conteudoDaCelula = () => "", conteudoExtra = "" } = {}) {
+// por cima da grade. tema é "claro" ou "escuro" e alturaExtra deixa um espaço
+// livre embaixo da grade.
+export function gerarGrade(
+  { semanas },
+  { tema = "claro", conteudoDaCelula = () => "", conteudoExtra = "", alturaExtra = 0 } = {},
+) {
   const cores = TEMAS[tema];
   const largura = MARGEM * 2 + semanas.length * PASSO - ESPACO_CELULA;
-  const altura = MARGEM * 2 + 7 * PASSO - ESPACO_CELULA;
+  const altura = ALTURA_GRADE + alturaExtra;
 
   const celulas = semanas.flatMap((dias, semana) =>
     dias.map((dia) => {

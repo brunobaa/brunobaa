@@ -1,8 +1,15 @@
-import { TAMANHO_CELULA, TEMAS, gerarGrade, posicaoDaCelula } from "./grade.js";
+import { ALTURA_GRADE, MARGEM, TAMANHO_CELULA, TEMAS, gerarGrade, posicaoDaCelula } from "./grade.js";
 import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
 const TAMANHO_FANTASMA = 12;
+const ALTURA_PLACAR = 18;
+
+// Cor do texto do placar, a mesma dos textos secundários do GitHub em cada tema.
+const COR_PLACAR = {
+  claro: "#57606a",
+  escuro: "#8b949e",
+};
 
 // Os fantasmas seguem o rastro do Pac-Man, cada um alguns passos atrás.
 const FANTASMAS = [
@@ -75,7 +82,48 @@ export function gerarAnimacao(
   </g>`;
   });
 
-  return gerarGrade(contribuicoes, { tema, conteudoDaCelula, conteudoExtra: [...fantasmas, pacman].join("\n  ") });
+  const placar = gerarPlacar(contribuicoes, passos, momentos, { duracao, cor: COR_PLACAR[tema] });
+
+  return gerarGrade(contribuicoes, {
+    tema,
+    conteudoDaCelula,
+    conteudoExtra: [...fantasmas, pacman, placar].join("\n  "),
+    alturaExtra: ALTURA_PLACAR,
+  });
+}
+
+// Placar embaixo da grade com quantos commits o Pac-Man já comeu. SVG não deixa
+// animar o texto em si, então cada total é um <text> que só aparece entre o
+// momento em que ele é alcançado e o momento da próxima mordida.
+function gerarPlacar({ semanas }, passos, momentos, { duracao, cor }) {
+  const quantidades = new Map(
+    semanas.flatMap((dias, semana) =>
+      dias.map((dia) => [`${semana},${new Date(`${dia.data}T00:00:00Z`).getUTCDay()}`, dia.quantidade]),
+    ),
+  );
+
+  const totais = [{ total: 0, momento: 0 }];
+  passos.forEach((passo, i) => {
+    if (!passo.come) return;
+    const comidos = totais.at(-1).total + quantidades.get(`${passo.semana},${passo.diaDaSemana}`);
+    // Se ele já começa em cima de um dia verde, o placar começa com esse total.
+    if (momentos[i] === 0) totais[0].total = comidos;
+    else totais.push({ total: comidos, momento: momentos[i] });
+  });
+
+  const y = ALTURA_GRADE + ALTURA_PLACAR / 2 + 2;
+  return totais
+    .map(({ total, momento }, i) => {
+      const proximo = totais[i + 1]?.momento;
+      const animacao =
+        proximo === undefined
+          ? `values="0;1" keyTimes="0;${formatar(momento)}"`
+          : momento === 0
+            ? `values="1;0" keyTimes="0;${formatar(proximo)}"`
+            : `values="0;1;0" keyTimes="0;${formatar(momento)};${formatar(proximo)}"`;
+      return `<text x="${MARGEM}" y="${y}" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="${cor}" opacity="${momento === 0 ? 1 : 0}">Commits comidos: ${total}<animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" ${animacao}/></text>`;
+    })
+    .join("\n  ");
 }
 
 function formatar(numero) {
