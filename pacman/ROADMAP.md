@@ -13,4 +13,17 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Fantasmas seguindo o Pac-Man (cada um alguns passos atrás, no rastro dele)
 - [x] Versão para tema escuro (`saida/pacman-escuro.svg`, escolhida pelo README conforme o tema)
 - [x] GitHub Action gerando a animação todo dia (`.github/workflows/pacman.yml`, publica no branch `output`)
-- [ ] Trocar a prévia do README pela animação final
+- [x] Trocar a prévia do README pela animação final (imagens do branch `output`)
+
+## Como rodar
+
+Precisa do Node 18 ou mais novo, sem dependências para instalar.
+
+```bash
+npm test
+npm run gerar          # usa o dono do repositório ou brunobaa
+npm run gerar -- outro # gera para outro usuário
+```
+
+Os SVGs saem em `saida/`, que fica fora do git. Com `GITHUB_TOKEN` a busca usa a API GraphQL; sem token, lê a página pública de contribuições.
+No GitHub, o workflow `.github/workflows/pacman.yml` faz isso todo dia e publica os SVGs no branch `output`, que é de onde o README do perfil carrega a animação.

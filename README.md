@@ -29,23 +29,14 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
 ![C++](https://img.shields.io/badge/C++-00599C?logo=cplusplus&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
 
-## 🟡 Pac-Man (em construção)
-
-<img src="pacman/sprites/pacman.svg" alt="Pac-Man" width="36">
-<img src="pacman/sprites/fantasma-blinky.svg" alt="Blinky" width="28">
-<img src="pacman/sprites/fantasma-pinky.svg" alt="Pinky" width="28">
-<img src="pacman/sprites/fantasma-inky.svg" alt="Inky" width="28">
-<img src="pacman/sprites/fantasma-clyde.svg" alt="Clyde" width="28">
-<img src="pacman/sprites/fantasma-assustado.svg" alt="Fantasma assustado" width="28">
-
-<img src="pacman/saida/linha.svg" alt="Pac-Man andando e comendo os pontos" width="400">
+## 🟡 Pac-Man comendo meus commits
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="pacman/saida/pacman-escuro.svg">
-  <img src="pacman/saida/pacman.svg" alt="Pac-Man comendo o gráfico de contribuições" width="696">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/brunobaa/brunobaa/output/pacman-escuro.svg">
+  <img src="https://raw.githubusercontent.com/brunobaa/brunobaa/output/pacman.svg" alt="Pac-Man comendo o gráfico de contribuições, com os fantasmas atrás dele" width="696">
 </picture>
 
-Um Pac-Man que vai comer meu gráfico de contribuições, com fantasminhas atrás dele. Estou construindo aos poucos: acompanhe em [pacman/ROADMAP.md](pacman/ROADMAP.md).
+Meu gráfico de contribuições virando uma fase de Pac-Man, com Blinky, Pinky, Inky e Clyde atrás dele. A animação é gerada todo dia por uma GitHub Action; o código está em [pacman/](pacman/).
 
 ---
 
