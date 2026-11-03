@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { alvoDoFantasma, simular } from "../src/simulacao.js";
+import { DURACAO_DO_SUSTO, PASSOS_PISCANDO, alvoDoFantasma, escolherPastilhas, simular } from "../src/simulacao.js";
 
 // Semanas completas a partir de 2025-01-05 (domingo), sem contribuições.
 function semanasVazias(quantidade) {
@@ -69,4 +69,51 @@ test("Blinky vai atrás do Pac-Man", () => {
   // Ele entra no passo 5 e anda 3 de cada 4 passos sempre para a direita.
   assert.ok(blinky.posicoes.at(-1).semana > 15);
   assert.equal(blinky.posicoes.at(-1).dia, 0);
+});
+
+test("pastilhas ficam nos até 4 dias de nível 4 com mais commits", () => {
+  const semanas = semanasVazias(10);
+  const fortes = [
+    [1, 2, 9],
+    [3, 4, 20],
+    [5, 1, 9],
+    [6, 6, 12],
+    [8, 3, 30],
+  ];
+  for (const [semana, dia, quantidade] of fortes) semanas[semana][dia] = { ...semanas[semana][dia], quantidade, nivel: 4 };
+  semanas[9][0] = { ...semanas[9][0], quantidade: 50, nivel: 3 };
+
+  assert.deepEqual(escolherPastilhas({ semanas }), [
+    { semana: 8, dia: 3 },
+    { semana: 3, dia: 4 },
+    { semana: 6, dia: 6 },
+    { semana: 1, dia: 2 },
+  ]);
+});
+
+test("comer uma pastilha assusta quem está na grade, que depois pisca e volta ao normal", () => {
+  const semanas = semanasVazias(50);
+  semanas[10][0] = { ...semanas[10][0], quantidade: 5, nivel: 4 };
+  const passos = linhaReta(45).map((passo) => ({ ...passo, come: passo.semana === 10 }));
+  const { pastilhas, fantasmas } = simular({ semanas }, passos);
+  const [blinky, pinky, inky] = fantasmas;
+
+  assert.deepEqual(pastilhas, [{ semana: 10, dia: 0 }]);
+  assert.equal(blinky.estados[9], "normal");
+  for (const fantasma of [blinky, pinky]) {
+    assert.deepEqual(fantasma.estados.slice(10, 10 + DURACAO_DO_SUSTO - PASSOS_PISCANDO), Array(20).fill("assustado"));
+    assert.deepEqual(fantasma.estados.slice(30, 40), Array(PASSOS_PISCANDO).fill("piscando"));
+    assert.equal(fantasma.estados[40], "normal");
+  }
+  // Inky só entra no passo 13, depois da pastilha, então não se assusta.
+  assert.ok(inky.estados.every((estado) => estado === "inativo" || estado === "normal"));
+});
+
+test("fantasma assustado foge do Pac-Man", () => {
+  const semanas = semanasVazias(50);
+  semanas[10][0] = { ...semanas[10][0], quantidade: 5, nivel: 4 };
+  const passos = linhaReta(45).map((passo) => ({ ...passo, come: passo.semana === 10 }));
+  const blinky = simular({ semanas }, passos).fantasmas[0];
+  const distancia = (i) => Math.abs(blinky.posicoes[i].semana - passos[i].semana) + Math.abs(blinky.posicoes[i].dia);
+  assert.ok(distancia(30) > distancia(10));
 });

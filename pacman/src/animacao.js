@@ -4,6 +4,7 @@ import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
 const TAMANHO_FANTASMA = 12;
+const TAMANHO_PASTILHA = 10;
 const ALTURA_PLACAR = 18;
 
 // Cor do texto do placar, a mesma dos textos secundários do GitHub em cada tema.
@@ -96,12 +97,22 @@ export function gerarAnimacao(
   </g>`;
   });
 
+  // Pastilhas piscando em cima dos dias mais fortes, até o Pac-Man comê-las.
+  const pastilhas = simulacao.pastilhas.map(({ semana, dia }) => {
+    const { x, y } = posicaoDaCelula(semana, dia);
+    const comida = comidoEm.get(`${semana},${dia}`);
+    return `<g>
+    <animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;${formatar(comida)}"/>
+    ${carregarSprite("pastilha", { x: x + (TAMANHO_CELULA - TAMANHO_PASTILHA) / 2, y: y + (TAMANHO_CELULA - TAMANHO_PASTILHA) / 2, tamanho: TAMANHO_PASTILHA })}
+  </g>`;
+  });
+
   const placar = gerarPlacar(contribuicoes, passos, momentos, { duracao, cor: COR_PLACAR[tema] });
 
   return gerarGrade(contribuicoes, {
     tema,
     conteudoDaCelula,
-    conteudoExtra: [...fantasmas, pacman, placar].join("\n  "),
+    conteudoExtra: [...pastilhas, ...fantasmas, pacman, placar].join("\n  "),
     alturaExtra: ALTURA_PLACAR,
   });
 }
