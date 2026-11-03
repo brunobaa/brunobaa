@@ -1,4 +1,5 @@
 import { ALTURA_GRADE, MARGEM, TAMANHO_CELULA, TEMAS, gerarGrade, posicaoDaCelula } from "./grade.js";
+import { simular } from "./simulacao.js";
 import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
@@ -11,13 +12,13 @@ const COR_PLACAR = {
   escuro: "#8b949e",
 };
 
-// Os fantasmas seguem o rastro do Pac-Man, cada um alguns passos atrás.
-const FANTASMAS = [
-  { nome: "blinky", atraso: 5 },
-  { nome: "pinky", atraso: 9 },
-  { nome: "inky", atraso: 13 },
-  { nome: "clyde", atraso: 17 },
-];
+// Sprite de cada estado do fantasma; "inativo" não desenha nada.
+const SPRITE_DO_ESTADO = {
+  normal: (nome) => `fantasma-${nome}`,
+  assustado: () => "fantasma-assustado",
+  piscando: () => "fantasma-piscando",
+  olhos: () => "fantasma-olhos",
+};
 
 // Ângulo do Pac-Man (o sprite olha para a direita) conforme a direção do passo.
 const ANGULOS = {
@@ -29,7 +30,8 @@ const ANGULOS = {
 
 // Gera o SVG com o Pac-Man percorrendo o caminho na grade de contribuições.
 // Cada quadradinho verde fica cinza no instante em que ele o come, os quatro
-// fantasmas vêm atrás dele e no fim a animação para um pouco e recomeça do zero.
+// fantasmas andam pela grade com a personalidade de cada um e no fim a animação
+// para um pouco e recomeça do zero.
 export function gerarAnimacao(
   contribuicoes,
   passos,
@@ -71,14 +73,26 @@ export function gerarAnimacao(
     </g>
   </g>`;
 
-  // Cada fantasma aparece no primeiro dia quando o Pac-Man já andou "atraso"
-  // passos e daí em diante pisa exatamente onde ele pisou, sempre atrás dele.
-  const fantasmas = FANTASMAS.filter(({ atraso }) => atraso < passos.length).map(({ nome, atraso }) => {
-    const rastro = centros.map((_, i) => centros[Math.max(0, i - atraso)]);
-    return `<g opacity="0">
-    <animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="0;1" keyTimes="0;${formatar(momentos[atraso])}"/>
-    <animateTransform attributeName="transform" type="translate" dur="${duracao}s" repeatCount="indefinite" values="${[...rastro, rastro.at(-1)].join(";")}" keyTimes="${keyTimes}"/>
-    ${carregarSprite(`fantasma-${nome}`, { x: -TAMANHO_FANTASMA / 2, y: -TAMANHO_FANTASMA / 2, tamanho: TAMANHO_FANTASMA })}
+  // Os fantasmas andam conforme a simulação. Cada estado tem o seu sprite, e só
+  // o sprite do estado atual fica visível em cada passo.
+  const simulacao = simular(contribuicoes, passos);
+  const fantasmas = simulacao.fantasmas.map(({ nome, posicoes, estados }) => {
+    const centrosDoFantasma = posicoes.map(({ semana, dia }) => {
+      const { x, y } = posicaoDaCelula(semana, dia);
+      return `${x + TAMANHO_CELULA / 2} ${y + TAMANHO_CELULA / 2}`;
+    });
+    const camadas = Object.entries(SPRITE_DO_ESTADO)
+      .filter(([estado]) => estados.includes(estado))
+      .map(([estado, sprite]) => {
+        const visivel = estados.map((atual) => (atual === estado ? 1 : 0));
+        return `<g opacity="${visivel[0]}">
+      ${animarDiscreto("opacity", visivel, momentos, duracao)}
+      ${carregarSprite(sprite(nome), { x: -TAMANHO_FANTASMA / 2, y: -TAMANHO_FANTASMA / 2, tamanho: TAMANHO_FANTASMA })}
+    </g>`;
+      });
+    return `<g>
+    <animateTransform attributeName="transform" type="translate" dur="${duracao}s" repeatCount="indefinite" values="${[...centrosDoFantasma, centrosDoFantasma.at(-1)].join(";")}" keyTimes="${keyTimes}"/>
+    ${camadas.join("\n    ")}
   </g>`;
   });
 
@@ -124,6 +138,14 @@ function gerarPlacar({ semanas }, passos, momentos, { duracao, cor }) {
       return `<text x="${MARGEM}" y="${y}" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="${cor}" opacity="${momento === 0 ? 1 : 0}">Commits comidos: ${total}<animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" ${animacao}/></text>`;
     })
     .join("\n  ");
+}
+
+// <animate> discreto que só guarda os passos em que o valor muda.
+function animarDiscreto(atributo, valoresPorPasso, momentos, duracao) {
+  const mudancas = valoresPorPasso.flatMap((valor, i) =>
+    i === 0 || valor !== valoresPorPasso[i - 1] ? [{ valor, momento: momentos[i] }] : [],
+  );
+  return `<animate attributeName="${atributo}" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="${mudancas.map(({ valor }) => valor).join(";")}" keyTimes="${mudancas.map(({ momento }) => formatar(momento)).join(";")}"/>`;
 }
 
 function formatar(numero) {

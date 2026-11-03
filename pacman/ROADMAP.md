@@ -18,6 +18,9 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 ## Extras
 
 - [x] Placar com a quantidade de commits comidos
+- [x] Fantasmas com personalidade (Blinky persegue, Pinky corta pela frente, Inky cerca junto com o Blinky, Clyde foge quando chega perto)
+- [ ] Pastilhas de poder deixando os fantasmas assustados
+- [ ] Pac-Man comendo fantasmas assustados
 
 ## Como rodar
 
