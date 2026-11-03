@@ -1,5 +1,4 @@
 import { ALTURA_GRADE, MARGEM, TAMANHO_CELULA, TEMAS, gerarGrade, posicaoDaCelula } from "./grade.js";
-import { simular } from "./simulacao.js";
 import { carregarSprite } from "./sprites.js";
 
 const TAMANHO_PACMAN = 13;
@@ -29,15 +28,16 @@ const ANGULOS = {
   "0,-1": 270,
 };
 
-// Gera o SVG com o Pac-Man percorrendo o caminho na grade de contribuições.
-// Cada quadradinho verde fica cinza no instante em que ele o come, os quatro
-// fantasmas andam pela grade com a personalidade de cada um e no fim a animação
-// para um pouco e recomeça do zero.
+// Gera o SVG da partida simulada por simular() na grade de contribuições.
+// Cada quadradinho verde fica cinza no instante em que o Pac-Man o come, os
+// quatro fantasmas andam pela grade com a personalidade de cada um e no fim a
+// animação para um pouco e recomeça do zero.
 export function gerarAnimacao(
   contribuicoes,
-  passos,
+  simulacao,
   { tema = "claro", segundosPorPasso = 0.15, pausaNoFim = 2 } = {},
 ) {
+  const { passos } = simulacao;
   const cores = TEMAS[tema];
   const tempoAndando = (passos.length - 1) * segundosPorPasso;
   const duracao = tempoAndando + pausaNoFim;
@@ -76,7 +76,6 @@ export function gerarAnimacao(
 
   // Os fantasmas andam conforme a simulação. Cada estado tem o seu sprite, e só
   // o sprite do estado atual fica visível em cada passo.
-  const simulacao = simular(contribuicoes, passos);
   const fantasmas = simulacao.fantasmas.map(({ nome, posicoes, estados }) => {
     const centrosDoFantasma = posicoes.map(({ semana, dia }) => {
       const { x, y } = posicaoDaCelula(semana, dia);
@@ -107,7 +106,10 @@ export function gerarAnimacao(
   </g>`;
   });
 
-  const placar = gerarPlacar(contribuicoes, passos, momentos, { duracao, cor: COR_PLACAR[tema] });
+  const placar = gerarPlacar(contribuicoes, passos, momentos, simulacao.fantasmasComidos, {
+    duracao,
+    cor: COR_PLACAR[tema],
+  });
 
   return gerarGrade(contribuicoes, {
     tema,
@@ -117,28 +119,29 @@ export function gerarAnimacao(
   });
 }
 
-// Placar embaixo da grade com quantos commits o Pac-Man já comeu. SVG não deixa
-// animar o texto em si, então cada total é um <text> que só aparece entre o
-// momento em que ele é alcançado e o momento da próxima mordida.
-function gerarPlacar({ semanas }, passos, momentos, { duracao, cor }) {
+// Placar embaixo da grade com quantos commits e fantasmas o Pac-Man já comeu.
+// SVG não deixa animar o texto em si, então cada placar é um <text> que só
+// aparece entre o momento em que ele é alcançado e o momento da próxima mudança.
+function gerarPlacar({ semanas }, passos, momentos, fantasmasComidos, { duracao, cor }) {
   const quantidades = new Map(
     semanas.flatMap((dias, semana) =>
       dias.map((dia) => [`${semana},${new Date(`${dia.data}T00:00:00Z`).getUTCDay()}`, dia.quantidade]),
     ),
   );
 
-  const totais = [{ total: 0, momento: 0 }];
+  let commits = 0;
+  let fantasmas = 0;
+  const totais = [];
   passos.forEach((passo, i) => {
-    if (!passo.come) return;
-    const comidos = totais.at(-1).total + quantidades.get(`${passo.semana},${passo.diaDaSemana}`);
-    // Se ele já começa em cima de um dia verde, o placar começa com esse total.
-    if (momentos[i] === 0) totais[0].total = comidos;
-    else totais.push({ total: comidos, momento: momentos[i] });
+    if (passo.come) commits += quantidades.get(`${passo.semana},${passo.diaDaSemana}`);
+    fantasmas += fantasmasComidos.filter((comido) => comido.passo === i).length;
+    const texto = `Commits comidos: ${commits}${fantasmas ? ` · Fantasmas comidos: ${fantasmas}` : ""}`;
+    if (totais.at(-1)?.texto !== texto) totais.push({ texto, momento: momentos[i] });
   });
 
   const y = ALTURA_GRADE + ALTURA_PLACAR / 2 + 2;
   return totais
-    .map(({ total, momento }, i) => {
+    .map(({ texto, momento }, i) => {
       const proximo = totais[i + 1]?.momento;
       const animacao =
         proximo === undefined
@@ -146,7 +149,7 @@ function gerarPlacar({ semanas }, passos, momentos, { duracao, cor }) {
           : momento === 0
             ? `values="1;0" keyTimes="0;${formatar(proximo)}"`
             : `values="0;1;0" keyTimes="0;${formatar(momento)};${formatar(proximo)}"`;
-      return `<text x="${MARGEM}" y="${y}" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="${cor}" opacity="${momento === 0 ? 1 : 0}">Commits comidos: ${total}<animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" ${animacao}/></text>`;
+      return `<text x="${MARGEM}" y="${y}" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="${cor}" opacity="${momento === 0 ? 1 : 0}">${texto}<animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" ${animacao}/></text>`;
     })
     .join("\n  ");
 }

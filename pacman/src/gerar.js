@@ -1,9 +1,9 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { gerarAnimacao } from "./animacao.js";
-import { calcularCaminho } from "./caminho.js";
 import { buscarContribuicoes } from "./contribuicoes.js";
 import { gerarGrade } from "./grade.js";
 import { gerarLinha } from "./linha.js";
+import { simular } from "./simulacao.js";
 
 const PASTA_SAIDA = new URL("../saida/", import.meta.url);
 const usuario = process.argv[2] ?? process.env.GITHUB_REPOSITORY_OWNER ?? "brunobaa";
@@ -23,11 +23,11 @@ writeFileSync(new URL("grade.svg", PASTA_SAIDA), gerarGrade(contribuicoes));
 writeFileSync(new URL("grade-escuro.svg", PASTA_SAIDA), gerarGrade(contribuicoes, { tema: "escuro" }));
 console.log("Gerado: saida/grade.svg e saida/grade-escuro.svg");
 
-const caminho = calcularCaminho(contribuicoes);
+const simulacao = simular(contribuicoes);
 console.log(
-  `Caminho: ${caminho.length} passos, comendo ${caminho.filter((passo) => passo.come).length} dias com contribuições`,
+  `Partida: ${simulacao.passos.length} passos, comendo ${simulacao.passos.filter((passo) => passo.come).length} dias com contribuições, ${simulacao.pastilhas.length} pastilhas e ${simulacao.fantasmasComidos.length} fantasmas`,
 );
 
-writeFileSync(new URL("pacman.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, caminho));
-writeFileSync(new URL("pacman-escuro.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, caminho, { tema: "escuro" }));
+writeFileSync(new URL("pacman.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, simulacao));
+writeFileSync(new URL("pacman-escuro.svg", PASTA_SAIDA), gerarAnimacao(contribuicoes, simulacao, { tema: "escuro" }));
 console.log("Gerado: saida/pacman.svg e saida/pacman-escuro.svg");
