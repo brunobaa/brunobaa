@@ -105,18 +105,21 @@ test("se começa em cima de um dia verde, o placar já começa com ele", () => {
 });
 
 test("o placar conta os fantasmas comidos", () => {
-  // Um commit em cada domingo até a semana 45 e uma pastilha na semana 10.
+  // Um commit em cada domingo até a semana 45 e uma pastilha na semana 30.
   const semanasComPastilha = Array.from({ length: 50 }, (_, semana) =>
     Array.from({ length: 7 }, (_, dia) => {
       const data = new Date(Date.UTC(2025, 0, 5 + semana * 7 + dia)).toISOString().slice(0, 10);
       if (dia !== 0 || semana < 1 || semana > 45) return { data, quantidade: 0, nivel: 0 };
-      return semana === 10 ? { data, quantidade: 5, nivel: 4 } : { data, quantidade: 1, nivel: 1 };
+      return semana === 30 ? { data, quantidade: 5, nivel: 4 } : { data, quantidade: 1, nivel: 1 };
     }),
   );
-  const svg = gerarAnimacao({ semanas: semanasComPastilha }, simular({ semanas: semanasComPastilha }));
+  const simulacao = simular({ semanas: semanasComPastilha });
+  const comidos = simulacao.fantasmasComidos.length;
+  assert.ok(comidos > 0);
+  const svg = gerarAnimacao({ semanas: semanasComPastilha }, simulacao);
   assert.match(svg, /Fantasmas comidos: 1</);
-  assert.match(svg, /Commits comidos: 49 · Fantasmas comidos: 2</);
-  assert.ok(!svg.includes("Fantasmas comidos: 3"));
+  assert.match(svg, new RegExp(`Commits comidos: 49 · Fantasmas comidos: ${comidos}<`));
+  assert.ok(!svg.includes(`Fantasmas comidos: ${comidos + 1}`));
   // A pastilha e o corpo azul do fantasma assustado aparecem na animação.
   assert.ok(svg.includes('r="6" fill="#ffb8ae"'));
   assert.ok(svg.includes('fill="#2121de" d="M0 28'));

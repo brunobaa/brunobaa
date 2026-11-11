@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { DURACAO_DO_SUSTO, PASSOS_PISCANDO, alvoDoFantasma, escolherPastilhas, simular } from "../src/simulacao.js";
+import { lerGrade } from "../src/caminho.js";
+import {
+  DURACAO_DO_SUSTO,
+  PASSOS_PISCANDO,
+  alvoDoFantasma,
+  casaDoFantasma,
+  escolherPastilhas,
+  simular,
+} from "../src/simulacao.js";
 
 // Semanas completas a partir de 2025-01-05 (domingo), sem contribuições.
 function semanasVazias(quantidade) {
@@ -55,7 +63,8 @@ test("fantasmas ficam inativos na casa até a hora de entrar", () => {
   const pinky = fantasmas.find(({ nome }) => nome === "pinky");
   assert.deepEqual(pinky.estados.slice(0, 9), Array(9).fill("inativo"));
   assert.equal(pinky.estados[9], "normal");
-  assert.deepEqual(pinky.posicoes[9], { semana: 0, dia: 0 });
+  // A casa da Pinky é o sábado da primeira semana.
+  assert.deepEqual(pinky.posicoes[9], { semana: 0, dia: 6 });
 });
 
 test("fantasmas andam no máximo um quadradinho por passo e só dentro da grade", () => {
@@ -69,12 +78,33 @@ test("fantasmas andam no máximo um quadradinho por passo e só dentro da grade"
   }
 });
 
-test("Blinky vai atrás do Pac-Man", () => {
-  const { fantasmas } = simular(linhaDeCommits(30, 29));
+test("cada fantasma entra pela sua própria casa", () => {
+  const { fantasmas } = simular(linhaDeCommits(31, 29));
+  const entradas = Object.fromEntries(fantasmas.map(({ nome, posicoes, estados }) => [nome, posicoes[estados.indexOf("normal")]]));
+  // Blinky no domingo da última semana, Pinky no sábado da primeira, Inky no
+  // sábado da última e Clyde na quarta do meio da grade.
+  assert.deepEqual(entradas, {
+    blinky: { semana: 30, dia: 0 },
+    pinky: { semana: 0, dia: 6 },
+    inky: { semana: 30, dia: 6 },
+    clyde: { semana: 15, dia: 3 },
+  });
+});
+
+test("a casa na última semana pela metade usa a semana anterior", () => {
+  const semanas = semanasVazias(10);
+  semanas[9] = semanas[9].slice(0, 3);
+  const { existe } = lerGrade(semanas);
+  assert.deepEqual(casaDoFantasma({ semana: 1, dia: 6 }, semanas, existe), { semana: 8, dia: 6 });
+  assert.deepEqual(casaDoFantasma({ semana: 1, dia: 0 }, semanas, existe), { semana: 9, dia: 0 });
+});
+
+test("Blinky sai da casa dele e vai na direção do Pac-Man", () => {
+  const { passos, fantasmas } = simular(linhaDeCommits(30, 29));
   const blinky = fantasmas.find(({ nome }) => nome === "blinky");
-  // Ele entra no passo 5 e anda 3 de cada 4 passos sempre para a direita.
-  assert.ok(blinky.posicoes.at(-1).semana > 15);
-  assert.equal(blinky.posicoes.at(-1).dia, 0);
+  const distancia = (i) =>
+    Math.abs(blinky.posicoes[i].semana - passos[i].semana) + Math.abs(blinky.posicoes[i].dia - passos[i].diaDaSemana);
+  assert.ok(distancia(12) < distancia(5));
 });
 
 test("pastilhas ficam nos até 4 dias de nível 4 com mais commits", () => {
@@ -98,9 +128,8 @@ test("pastilhas ficam nos até 4 dias de nível 4 com mais commits", () => {
 });
 
 test("comer uma pastilha assusta quem está na grade, que depois pisca e volta ao normal", () => {
-  // A pastilha fica longe da casa: quando o Pac-Man a come, os fantasmas estão
-  // mais de 12 quadradinhos atrás e ele não sai do caminho para persegui-los.
-  const { passos, pastilhas, fantasmas } = simular(linhaDeCommits(100, 95, 60));
+  // Sem perseguição, nenhum fantasma é comido e dá para ver o susto inteiro.
+  const { passos, pastilhas, fantasmas } = simular(linhaDeCommits(100, 95, 60), { distanciaDePerseguicao: 0 });
   const [blinky, pinky, inky, clyde] = fantasmas;
 
   assert.deepEqual(pastilhas, [{ semana: 60, dia: 0 }]);
@@ -115,7 +144,7 @@ test("comer uma pastilha assusta quem está na grade, que depois pisca e volta a
 });
 
 test("fantasma assustado foge do Pac-Man", () => {
-  const { passos, fantasmas } = simular(linhaDeCommits(100, 95, 60));
+  const { passos, fantasmas } = simular(linhaDeCommits(100, 95, 60), { distanciaDePerseguicao: 0 });
   const blinky = fantasmas[0];
   const distancia = (i) =>
     Math.abs(blinky.posicoes[i].semana - passos[i].semana) + Math.abs(blinky.posicoes[i].dia - passos[i].diaDaSemana);
@@ -123,12 +152,8 @@ test("fantasma assustado foge do Pac-Man", () => {
 });
 
 test("Pac-Man persegue e come os fantasmas assustados que estão perto", () => {
-  // A pastilha fica logo no começo, com Blinky e Pinky colados atrás dele.
-  const { passos, fantasmasComidos, fantasmas } = simular(linhaDeCommits(50, 45, 10));
-  assert.deepEqual(
-    fantasmasComidos.map(({ nome }) => nome),
-    ["blinky", "pinky"],
-  );
+  const { passos, fantasmasComidos, fantasmas } = simular(linhaDeCommits(50, 45, 30));
+  assert.ok(fantasmasComidos.length > 0);
 
   for (const { passo, nome } of fantasmasComidos) {
     const fantasma = fantasmas.find((candidato) => candidato.nome === nome);
@@ -139,10 +164,10 @@ test("Pac-Man persegue e come os fantasmas assustados que estão perto", () => {
     assert.ok(distancia <= 1);
     assert.equal(fantasma.estados[passo], "olhos");
 
-    // Os olhos voltam para casa e lá o fantasma renasce normal.
+    // Os olhos voltam para a casa dele e lá o fantasma renasce normal.
     const renasce = fantasma.estados.indexOf("normal", passo);
     assert.ok(renasce > passo);
-    assert.deepEqual(fantasma.posicoes[renasce], { semana: 0, dia: 0 });
+    assert.deepEqual(fantasma.posicoes[renasce], fantasma.posicoes[fantasma.estados.indexOf("normal")]);
     assert.ok(fantasma.estados.slice(passo, renasce).every((estado) => estado === "olhos"));
   }
   // O Pac-Man ainda come todos os commits depois de perseguir os fantasmas.

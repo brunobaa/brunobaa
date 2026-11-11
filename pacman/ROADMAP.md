@@ -21,6 +21,8 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Fantasmas com personalidade (Blinky persegue, Pinky corta pela frente, Inky cerca junto com o Blinky, Clyde foge quando chega perto)
 - [x] Pastilhas de poder deixando os fantasmas assustados (nos até 4 dias mais fortes do ano)
 - [x] Pac-Man comendo fantasmas assustados (ele larga o caminho para persegui-los e os olhos voltam para casa)
+- [x] Cada fantasma entra por uma casa diferente (cantos e meio da grade)
+- [ ] Animação do Pac-Man morrendo no fim do ciclo
 
 ## Como rodar
 

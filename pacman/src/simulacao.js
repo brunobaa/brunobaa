@@ -12,14 +12,23 @@ const DIRECOES = [
   { semana: 1, dia: 0 },
 ];
 
-// Cada fantasma entra pela casa (o primeiro dia da grade) alguns passos depois
-// do Pac-Man começar a andar.
+// Cada fantasma tem a sua casa em um ponto diferente da grade, de onde entra
+// alguns passos depois do Pac-Man começar a andar. "lugar" é a semana, como
+// fração da grade (0 = primeira, 1 = última), e o dia da semana da casa.
 export const FANTASMAS = [
-  { nome: "blinky", atraso: 5 },
-  { nome: "pinky", atraso: 9 },
-  { nome: "inky", atraso: 13 },
-  { nome: "clyde", atraso: 17 },
+  { nome: "blinky", atraso: 5, lugar: { semana: 1, dia: 0 } },
+  { nome: "pinky", atraso: 9, lugar: { semana: 0, dia: 6 } },
+  { nome: "inky", atraso: 13, lugar: { semana: 1, dia: 6 } },
+  { nome: "clyde", atraso: 17, lugar: { semana: 0.5, dia: 3 } },
 ];
+
+// Converte o lugar de um fantasma no dia da grade. Se o dia ainda não existe
+// (a última semana costuma estar pela metade), usa a mesma linha da semana anterior.
+export function casaDoFantasma(lugar, semanas, existe) {
+  let semana = Math.round(lugar.semana * (semanas.length - 1));
+  while (semana > 0 && !existe.has(chaveDaPosicao({ semana, dia: lugar.dia }))) semana--;
+  return { semana, dia: lugar.dia };
+}
 
 // As pastilhas de poder ficam nos dias mais fortes do ano: até 4 dias do nível
 // mais alto, os de mais commits primeiro.
@@ -27,8 +36,8 @@ const MAXIMO_DE_PASTILHAS = 4;
 // Quantos passos o susto dura e em quantos dos últimos o fantasma pisca.
 export const DURACAO_DO_SUSTO = 30;
 export const PASSOS_PISCANDO = 10;
-// O Pac-Man só larga o caminho para perseguir fantasmas assustados até essa
-// distância, e a partida tem um limite de passos para nunca ficar infinita.
+// Por padrão o Pac-Man só larga o caminho para perseguir fantasmas assustados
+// até essa distância, e a partida tem um limite de passos para nunca ficar infinita.
 const DISTANCIA_DE_PERSEGUICAO = 12;
 const LIMITE_DE_PASSOS = 2000;
 
@@ -81,24 +90,27 @@ export function alvoDoFantasma(nome, { pacman, direcaoDoPacman, blinky, fantasma
 // { semana, dia } e o estado em cada passo do Pac-Man. O
 // estado é "inativo" antes de ele entrar, "normal", "assustado" e depois
 // "piscando" quando o Pac-Man come uma pastilha, e "olhos" depois de comido.
-export function simular(contribuicoes) {
+export function simular(contribuicoes, { distanciaDePerseguicao = DISTANCIA_DE_PERSEGUICAO } = {}) {
   const { existe, verdes, inicio } = lerGrade(contribuicoes.semanas);
   const pastilhas = escolherPastilhas(contribuicoes);
   const ehPastilha = new Set(pastilhas.map(chaveDaPosicao));
-  const casa = { semana: inicio.semana, dia: inicio.diaDaSemana };
   let sustoAte = -1;
   const fantasmasComidos = [];
 
-  const fantasmas = FANTASMAS.map(({ nome, atraso }) => ({
-    nome,
-    atraso,
-    posicao: casa,
-    direcao: { semana: 0, dia: 0 },
-    estado: "inativo",
-    assustado: false,
-    posicoes: [],
-    estados: [],
-  }));
+  const fantasmas = FANTASMAS.map(({ nome, atraso, lugar }) => {
+    const casa = casaDoFantasma(lugar, contribuicoes.semanas, existe);
+    return {
+      nome,
+      atraso,
+      casa,
+      posicao: casa,
+      direcao: { semana: 0, dia: 0 },
+      estado: "inativo",
+      assustado: false,
+      posicoes: [],
+      estados: [],
+    };
+  });
 
   // O Pac-Man vai de verde em verde pelo caminho mais curto, como antes, mas
   // larga o caminho para perseguir um fantasma assustado que esteja perto. Se
@@ -111,7 +123,7 @@ export function simular(contribuicoes) {
     const assustados = new Set(
       fantasmas.filter((fantasma) => fantasma.assustado).map((fantasma) => chaveDaPosicao(fantasma.posicao)),
     );
-    const perseguicao = caminhoAteOMaisProximo(atual, assustados, existe, { distanciaMaxima: DISTANCIA_DE_PERSEGUICAO });
+    const perseguicao = caminhoAteOMaisProximo(atual, assustados, existe, { distanciaMaxima: distanciaDePerseguicao });
 
     let proximo;
     if (perseguicao?.length) {
@@ -143,7 +155,7 @@ export function simular(contribuicoes) {
     const anterior = passo > 0 ? { semana: passos[passo - 1].semana, dia: passos[passo - 1].diaDaSemana } : pacman;
     const andou = { semana: pacman.semana - anterior.semana, dia: pacman.dia - anterior.dia };
     const direcaoDoPacman = andou.semana || andou.dia ? andou : { semana: 1, dia: 0 };
-    const blinky = fantasmas.find((fantasma) => fantasma.nome === "blinky")?.posicao ?? casa;
+    const blinky = fantasmas.find((fantasma) => fantasma.nome === "blinky").posicao;
 
     // Comer uma pastilha assusta quem já está na grade, e eles dão meia-volta.
     if (passos[passo].come && ehPastilha.has(chaveDaPosicao(pacman))) {
@@ -163,9 +175,9 @@ export function simular(contribuicoes) {
       if (passo === fantasma.atraso) {
         fantasma.estado = "normal";
       } else if (fantasma.estado === "olhos") {
-        // Os olhos voltam para casa sem parar e lá o fantasma renasce normal.
-        mover(fantasma, casa, existe);
-        if (chaveDaPosicao(fantasma.posicao) === chaveDaPosicao(casa)) fantasma.estado = "normal";
+        // Os olhos voltam para a casa do fantasma sem parar e lá ele renasce normal.
+        mover(fantasma, fantasma.casa, existe);
+        if (chaveDaPosicao(fantasma.posicao) === chaveDaPosicao(fantasma.casa)) fantasma.estado = "normal";
       } else if (fantasma.estado === "normal" && andaNestePasso(passo, fantasma.assustado)) {
         if (fantasma.assustado) {
           mover(fantasma, pacman, existe, { fugir: true });
