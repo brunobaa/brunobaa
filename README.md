@@ -36,7 +36,7 @@ Estagiário de **Suporte de TI na SJCDH** (Governo do RS) e estudante de **Ciên
   <img src="https://raw.githubusercontent.com/brunobaa/brunobaa/output/pacman.svg" alt="Pac-Man comendo o gráfico de contribuições, com os fantasmas atrás dele" width="696">
 </picture>
 
-Meu gráfico de contribuições virando uma fase de Pac-Man, com Blinky, Pinky, Inky e Clyde atrás dele. A animação é gerada todo dia por uma GitHub Action; o código está em [pacman/](pacman/).
+[pacman/](pacman/)
 
 ---
 
