@@ -4,6 +4,8 @@ import { carregarSprite } from "./sprites.js";
 const TAMANHO_PACMAN = 13;
 const TAMANHO_FANTASMA = 12;
 const TAMANHO_PASTILHA = 10;
+// Segundos que a animação de morte do Pac-Man leva, no máximo a pausa do fim.
+const DURACAO_DA_MORTE = 1.5;
 const ALTURA_PLACAR = 18;
 
 // Cor do texto do placar, a mesma dos textos secundários do GitHub em cada tema.
@@ -30,8 +32,8 @@ const ANGULOS = {
 
 // Gera o SVG da partida simulada por simular() na grade de contribuições.
 // Cada quadradinho verde fica cinza no instante em que o Pac-Man o come, os
-// quatro fantasmas andam pela grade com a personalidade de cada um e no fim a
-// animação para um pouco e recomeça do zero.
+// quatro fantasmas andam pela grade com a personalidade de cada um e no fim o
+// Pac-Man morre, a animação para um pouco e recomeça do zero.
 export function gerarAnimacao(
   contribuicoes,
   simulacao,
@@ -66,11 +68,35 @@ export function gerarAnimacao(
   // O último valor se repete no fim para o Pac-Man ficar parado durante a pausa.
   const keyTimes = [...momentos, 1].map(formatar).join(";");
 
+  // No fim da partida o Pac-Man morre: o sprite normal some e a animação de
+  // morte toca uma vez só, sincronizada com o ciclo, durante a pausa.
+  const inicioDaMorte = tempoAndando / duracao;
+  const duracaoDaMorte = Math.min(DURACAO_DA_MORTE, pausaNoFim);
+  const morte = carregarSprite("pacman-morte", {
+    x: -TAMANHO_PACMAN / 2,
+    y: -TAMANHO_PACMAN / 2,
+    tamanho: TAMANHO_PACMAN,
+  }).replace(/<animate[^>]*values="([^"]+)"\s*\/>/, (_, valores) => {
+    const quadros = valores.split(";").map((quadro) => quadro.trim());
+    const keyTimesDaMorte = [
+      0,
+      ...quadros.map((_, i) => inicioDaMorte + (i * duracaoDaMorte) / quadros.length / duracao),
+    ];
+    return `<animate attributeName="d" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="${[quadros[0], ...quadros].join(";")}" keyTimes="${keyTimesDaMorte.map(formatar).join(";")}"/>`;
+  });
+
   const pacman = `<g>
     <animateTransform attributeName="transform" type="translate" dur="${duracao}s" repeatCount="indefinite" values="${[...centros, centros.at(-1)].join(";")}" keyTimes="${keyTimes}"/>
     <g>
       <animateTransform attributeName="transform" type="rotate" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="${[...angulos, angulos.at(-1)].join(";")}" keyTimes="${keyTimes}"/>
-      ${carregarSprite("pacman", { x: -TAMANHO_PACMAN / 2, y: -TAMANHO_PACMAN / 2, tamanho: TAMANHO_PACMAN })}
+      <g opacity="1">
+        <animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;${formatar(inicioDaMorte)}"/>
+        ${carregarSprite("pacman", { x: -TAMANHO_PACMAN / 2, y: -TAMANHO_PACMAN / 2, tamanho: TAMANHO_PACMAN })}
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="${duracao}s" repeatCount="indefinite" calcMode="discrete" values="0;1" keyTimes="0;${formatar(inicioDaMorte)}"/>
+        ${morte}
+      </g>
     </g>
   </g>`;
 

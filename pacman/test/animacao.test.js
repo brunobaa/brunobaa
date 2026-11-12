@@ -124,3 +124,19 @@ test("o placar conta os fantasmas comidos", () => {
   assert.ok(svg.includes('r="6" fill="#ffb8ae"'));
   assert.ok(svg.includes('fill="#2121de" d="M0 28'));
 });
+
+test("no fim da partida o Pac-Man some e toca a animação de morte uma vez", () => {
+  const simulacao = simular({ semanas });
+  // 6 passos de 1s + 2s de pausa = 8s: a morte começa em 6/8 e dura 1,5s.
+  const svg = gerarAnimacao({ semanas }, simulacao, { segundosPorPasso: 1, pausaNoFim: 2 });
+
+  assert.match(svg, /values="1;0" keyTimes="0;0.75"/);
+  assert.match(svg, /values="0;1" keyTimes="0;0.75"/);
+
+  const morte = svg.match(/<animate attributeName="d" dur="8s"[^>]*values="([^"]+)" keyTimes="([^"]+)"/);
+  const quadros = morte[1].split(";");
+  const keyTimes = morte[2].split(";").map(Number);
+  assert.equal(quadros.length, 7);
+  assert.equal(quadros.at(-1), "M25 25 Z");
+  assert.deepEqual(keyTimes, [0, 0.75, 0.7813, 0.8125, 0.8438, 0.875, 0.9063]);
+});
