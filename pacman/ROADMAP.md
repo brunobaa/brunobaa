@@ -24,6 +24,12 @@ Ideia: um Pac-Man percorrendo o gráfico de contribuições do GitHub, comendo o
 - [x] Cada fantasma entra por uma casa diferente (cantos e meio da grade)
 - [x] Animação do Pac-Man morrendo no fim do ciclo
 
+## Próximas ideias
+
+- [ ] Olhos dos fantasmas virando para o lado em que andam
+- [ ] Fruta bônus no dia com mais commits do ano
+- [ ] Nomes dos meses e dos dias da semana em volta da grade
+
 ## Como rodar
 
 Precisa do Node 18 ou mais novo, sem dependências para instalar.
