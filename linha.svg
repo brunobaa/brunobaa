@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" width="400" height="50">
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.111"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="75" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.222"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="115" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.333"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="155" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.444"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="195" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.556"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="235" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.667"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="275" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.778"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="315" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g opacity="1">
+    <animate attributeName="opacity" dur="4s" repeatCount="indefinite" calcMode="discrete" values="1;0" keyTimes="0;0.889"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" x="355" y="20" width="10" height="10">
+  <circle cx="4" cy="4" r="2" fill="#ffb8ae"/>
+</svg>
+  </g>
+  <g>
+    <animateTransform attributeName="transform" type="translate" from="0 0" to="360 0" dur="4s" repeatCount="indefinite"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" x="0" y="5" width="40" height="40">
+  <path fill="#ffcc00" d="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z">
+    <animate attributeName="d" dur="0.4s" repeatCount="indefinite"
+      values="M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z;
+              M25 25 L50 24.9 A25 25 0 1 0 50 25.1 Z;
+              M25 25 L47.98 15.36 A25 25 0 1 0 47.98 34.64 Z"/>
+  </path>
+</svg>
+  </g>
+</svg>
